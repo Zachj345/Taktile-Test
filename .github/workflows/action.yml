@@ -1,0 +1,24 @@
+name: Update Taktile Code Node
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - updated_code.py # Trigger the action only when this file is updated
+
+jobs:
+  update-code-node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Python script to update code node
+        run: python3 update_code_node.py
+        env:
+          TAKTILE_API_ENDPOINT: ${{ secrets.TAKTILE_API_ENDPOINT }}
+          TAKTILE_API_KEY: ${{ secrets.TAKTILE_API_KEY }}
+          TAKTILE_FLOW_ID: ${{ secrets.TAKTILE_FLOW_ID }}
+          TAKTILE_NODE_ID: ${{ secrets.TAKTILE_NODE_ID }}
