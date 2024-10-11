@@ -10,10 +10,11 @@ API_KEY = config['api_key']
 URL = config['base_url']
 FLOW_ID = config['flow_id']
 
+
 def update_node(node_id, script_path):
     with open(script_path, 'r') as file:
         script_content = file.read()
-    
+
     url = f"{URL}/flows/{FLOW_ID}/nodes/{node_id}"
 
     headers = {
@@ -27,12 +28,13 @@ def update_node(node_id, script_path):
             "code": script_content
         }
     }
-    
+
     response = requests.patch(url, headers=headers, json=payload)
     print(response.status_code)
     print(response.text)
 
     return response.json()
+
 
 def get_python_files(directory):
     py_files = []
@@ -42,7 +44,7 @@ def get_python_files(directory):
             if i.endswith(".py"):
                 py_files.append(os.path.join(root, i))
     return py_files
-    
+
 
 def main():
     test_node_id = config["node_id"]
@@ -65,8 +67,6 @@ def main():
         else:
             print(f"No node ID mapping found for {file_name}")
 
+
 if __name__ == "__main__":
     main()
-
-
-
