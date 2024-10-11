@@ -1,4 +1,4 @@
-ame: Sync New Python Files from NB36 to Taktile-Test
+name: Sync New Python Files from NB36 to Taktile-Test
 
 on:
   push:
