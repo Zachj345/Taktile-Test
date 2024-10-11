@@ -3,8 +3,8 @@ import requests
 import json
 
 # Load configuration
-with open('config.json', 'r') as config_file:
-    config = json.load(config_file)
+# with open('config.json', 'r') as config_file:
+#     config = json.load(config_file)
 
 API_KEY = os.environ['API_KEY']
 URL = os.environ['URL']
@@ -47,7 +47,8 @@ def get_python_files(directory):
 
 
 def main():
-    test_node_id = config["node_id"]
+    # test_node_id = config["node_id"]
+    test_node_id = os.environ["NODE_ID"]
     # Get all Python files in current dir and sub-dirs
     py_files = get_python_files('.')
 
