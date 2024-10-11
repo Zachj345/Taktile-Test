@@ -6,43 +6,45 @@ on:
       - main
 
 permissions:
-  contents: write  # Allow write access to the repository contents
+  contents: write # Allow write access to the repository contents
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Taktile-Test
-      uses: actions/checkout@v2
-      with:
-        repository: Zachj345/Taktile-Test
-        token: ${{ secrets.GITHUB_TOKEN }}
-        path: Taktile-Test
+      - name: Checkout Taktile-Test
+        uses: actions/checkout@v2
+        with:
+          repository: Zachj345/Taktile-Test
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: Taktile-Test
 
-    - name: Checkout NB36-test
-      uses: actions/checkout@v2
-      with:
-        repository: Zachj345/NB36-test
-        token: ${{ secrets.GITHUB_TOKEN }}
-        path: NB36-test
+      - name: Checkout NB36-test
+        uses: actions/checkout@v2
+        with:
+          repository: Zachj345/NB36-test
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: NB36-test
 
-    - name: Copy New Python Files
-      run: |
-        cd NB36-test
-        for file in $(find . -name "*.py"); do
-          if [ ! -f "../Taktile-Test/$file" ] || [ "$file" -nt "../Taktile-Test/$file" ]; then
-            echo "Copying $file to Taktile-Test"
-            mkdir -p "../Taktile-Test/$(dirname $file)"
-            cp "$file" "../Taktile-Test/$file"
-          fi
-        done
+      - name: Copy New Python Files
+        run: |
+          cd NB36-test
+          for file in $(find . -name "*.py"); do
+            if [ ! -f "../Taktile-Test/$file" ] || [ "$file" -nt "../Taktile-Test/$file" ]; then
+              echo "Copying $file to Taktile-Test"
+              mkdir -p "../Taktile-Test/$(dirname $file)"
+              cp "$file" "../Taktile-Test/$file"
+            fi
+          done
 
-    - name: Commit and Push Changes
+      - name: Commit and Push Changes
         run: |
           cd Taktile-Test
           git config user.name "github-actions"
           git config user.email "action@github.com"
           git add .
           git commit -m "Sync new Python files from NB36-test" || echo "No changes to commit"
+
           git remote add source https://github.com/Zachj345/Taktile-Test.git || echo "Remote 'source' already exists"
+
           git push source main
