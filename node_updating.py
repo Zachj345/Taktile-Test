@@ -6,10 +6,10 @@ import json
 # with open('config.json', 'r') as config_file:
 #     config = json.load(config_file)
 
-API_KEY = os.environ['api_key']
-URL = os.environ['url']
-FLOW_ID = os.environ['flow_id']
-
+API_KEY = os.environ['API_KEY']
+URL = os.environ['URL']  # Assuming this is your BASE_URL
+FLOW_ID = os.environ['FLOW_ID']
+NODE_ID = os.environ['NODE_ID']
 
 def update_node(node_id, script_path):
     with open(script_path, 'r') as file:
@@ -47,8 +47,7 @@ def get_python_files(directory):
 
 
 def main():
-    # test_node_id = config["node_id"]
-    test_node_id = os.environ["node_id"]
+    test_node_id = NODE_ID
     # Get all Python files in current dir and sub-dirs
     py_files = get_python_files('.')
 
