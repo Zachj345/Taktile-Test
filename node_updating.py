@@ -49,6 +49,13 @@ def update_node(node_id, script_path):
         "type": "code",
         "config": {
             "code": script_content
+        },
+        "metadata": {
+            "version": "v1.0",
+            "entity_id": "string"
+        },
+        "control": {
+            "execution_mode": "sync"
         }
     }
 
