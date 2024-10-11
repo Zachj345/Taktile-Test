@@ -1,36 +1,48 @@
-name: Sync Repos
+name: Sync New Python Files from NB36 to Taktile-Test
 
 on:
-  workflow_dispatch:
-  repository_dispatch:
-    types: [nb36_update]
+  push:
+    branches:
+      - main
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Taktile-Test
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
+          repository: Zachj345/Taktile-Test
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: Taktile-Test
 
-      - name: Configure Git
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-      - name: Fetch and merge changes from NB36 repo
-        run: |
-          git remote add nb36 https://github.com/Zachj345/NB36-test.git
-          git fetch nb36
-          git merge nb36/main --allow-unrelated-histories
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.CLIENT_GITHUB_TOKEN }}
-
-      - name: Trigger sync_and_update workflow
-        uses: peter-evans/repository-dispatch@v2
+      - name: Checkout NB36-test
+        uses: actions/checkout@v2
         with:
-          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
-          event-type: node_updating
+          repository: Zachj345/NB36-test
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: NB36-test
+
+      - name: Copy New Python Files
+        run: |
+          # Navigate to the NB36-test directory
+          cd NB36-test
+
+          # Find all Python files and copy them to the Taktile-Test directory
+          for file in $(find . -name "*.py"); do
+            # Copy only if the file does not exist in Taktile-Test or if it's newer
+            if [ ! -f "../Taktile-Test/$file" ] || [ "$file" -nt "../Taktile-Test/$file" ]; then
+              echo "Copying $file to Taktile-Test"
+              mkdir -p "../Taktile-Test/$(dirname $file)"  # Create the directory if it doesn't exist
+              cp "$file" "../Taktile-Test/$file"
+            fi
+          done
+
+      - name: Commit and Push Changes
+        run: |
+          cd Taktile-Test
+          git config user.name "github-actions"
+          git config user.email "action@github.com"
+          git add .
+          git commit -m "Sync new Python files from NB36-test" || echo "No changes to commit"
+          git push source main
