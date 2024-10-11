@@ -7,10 +7,10 @@ from urllib.parse import urljoin
 # with open('config.json', 'r') as config_file:
 #     config = json.load(config_file)
 
-API_KEY = os.environ['API_KEY']
-URL = os.environ['URL']
-FLOW_ID = os.environ['FLOW_ID']
-NODE_ID = os.environ['NODE_ID']
+API_KEY = os.environ['API_KEY'].strip('"')
+URL = "https://api.taktile.com"
+FLOW_ID = os.environ['FLOW_ID'].strip('"')
+NODE_ID = os.environ['NODE_ID'].strip('"')
 
 if not URL.startswith(('http://', 'https://')):
     URL = 'https://' + URL
