@@ -8,12 +8,13 @@ from urllib.parse import urljoin
 #     config = json.load(config_file)
 
 API_KEY = os.environ['API_KEY'].strip('"')
-URL = "https://api.taktile.com"
+# since there's no sensitive data here I'm just going to hardcode it
+URL = "https://eu-central-1.taktile-org.decide.taktile.com/run/api/v1/flows/patch-decision-graph/sandbox/decide"
 FLOW_ID = os.environ['FLOW_ID'].strip('"')
 NODE_ID = os.environ['NODE_ID'].strip('"')
 
-if not URL.startswith(('http://', 'https://')):
-    URL = 'https://' + URL
+# if not URL.startswith(('http://', 'https://')):
+#     URL = 'https://' + URL
 
 excluded_files = ["node_updating.py", "api_testing.py"]
 
@@ -37,7 +38,7 @@ def update_node(node_id, script_path):
     with open(script_path, 'r') as file:
         script_content = file.read()
 
-    url = urljoin(URL, f"/flows/{FLOW_ID}/nodes/{node_id}")
+    url = URL
 
     headers = {
         "accept": "application/json",
