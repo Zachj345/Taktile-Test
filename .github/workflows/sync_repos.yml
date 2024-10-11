@@ -9,28 +9,28 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
 
-    - name: Configure Git
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
 
-    - name: Fetch and merge changes from NB36 repo
-      run: |
-        git remote add nb36 https://github.com/Zachj345/NB36-test.git
-        git fetch nb36
-        git merge nb36/main --allow-unrelated-histories
-        git push origin main
-      env:
-        GITHUB_TOKEN: ${{ secrets.CLIENT_GITHUB_TOKEN }}
+      - name: Fetch and merge changes from NB36 repo
+        run: |
+          git remote add nb36 https://github.com/Zachj345/NB36-test.git
+          git fetch nb36
+          git merge nb36/main --allow-unrelated-histories
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.CLIENT_GITHUB_TOKEN }}
 
-    - name: Trigger sync_and_update workflow
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
-        event-type: update_nodes
+      - name: Trigger sync_and_update workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
+          event-type: node_updating
