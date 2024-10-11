@@ -52,7 +52,7 @@ def update_node(node_id, script_path):
         }
     }
 
-    response = requests.patch(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload)
     print(response.status_code)
     print(response.text)
 
