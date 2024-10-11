@@ -19,6 +19,7 @@ excluded_files = ["node_updating.py", "api_testing.py"]
 
 default_node_id = NODE_ID
 
+
 def get_node_id(file_name):
     if file_name in excluded_files:
         return None
@@ -27,7 +28,8 @@ def get_node_id(file_name):
     # using default node ID as we weren't provided others in the api docs
     try:
         return os.environ.get(env_var_name, NODE_ID)
-    except KeyError:
+
+    except:  # looking for a key error but any errors should return the default
         return NODE_ID
 
 
