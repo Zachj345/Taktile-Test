@@ -96,6 +96,7 @@ def main():
                 result = update_node(node_id, path)
                 print(f"updated node {node_id} with {file_name}: {result}")
                 excluded_files.append(file_name)
+                print(excluded_files)
             except requests.exceptions.RequestException as e:
                 print(f"error updating node for {file_name}: {e}")
         else:
