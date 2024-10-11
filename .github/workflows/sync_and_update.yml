@@ -1,23 +1,21 @@
-name: Sync and Update Taktile
+name: Sync and Update
 
 on:
-  schedule:
-    - cron: '0 * * * *'  # Run every hour
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
+  repository_dispatch:
+    types: [update_nodes]
+  push:
+    branches:
+      - main
 
 jobs:
-  sync_and_update:
+  update:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Sync with client repository
-      run: |
-        git remote add client https://${{ secrets.CLIENT_GITHUB_TOKEN }}@github.com/client-org/client-repo.git
-        git fetch client
-        git merge client/main --allow-unrelated-histories
-        git push origin main
+      with:
+        token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -29,10 +27,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: Update Taktile Code Nodes
+    - name: Run update script
       env:
-        url: ${{ secrets.URL }}
-        flow_id: ${{ secrets.FLOW_ID }}
-        node_id: ${{ secrets.NODE_ID }}
-        api_key: ${{ secrets.API_KEY }}
-      run: python .github/workflows/node_updating.py
+        URL: ${{ secrets.URL }}
+        FLOW_ID: ${{ secrets.FLOW_ID }}
+        NODE_ID: ${{ secrets.NODE_ID }}
+      run: python update_nodes.py
