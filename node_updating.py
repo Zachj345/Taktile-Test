@@ -6,9 +6,9 @@ import json
 with open('config.json', 'r') as config_file:
     config = json.load(config_file)
 
-API_KEY = config['api_key']
-URL = config['base_url']
-FLOW_ID = config['flow_id']
+API_KEY = os.environ['API_KEY']
+URL = os.environ['URL']
+FLOW_ID = os.environ['FLOW_ID']
 
 
 def update_node(node_id, script_path):
