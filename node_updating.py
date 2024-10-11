@@ -1,15 +1,19 @@
 import os
 import requests
 import json
+from urllib.parse import urljoin
 
 # Load configuration
 # with open('config.json', 'r') as config_file:
 #     config = json.load(config_file)
 
 API_KEY = os.environ['API_KEY']
-URL = os.environ['URL']  # Assuming this is your BASE_URL
+URL = os.environ['URL']  
 FLOW_ID = os.environ['FLOW_ID']
 NODE_ID = os.environ['NODE_ID']
+
+if not URL.startswith(('http://', 'https://')):
+    URL = 'https://' + URL
 
 excluded_files = ["node_updating.py", "api_testing.py"]
 
@@ -23,7 +27,7 @@ def update_node(node_id, script_path):
     with open(script_path, 'r') as file:
         script_content = file.read()
 
-    url = f"{URL}/flows/{FLOW_ID}/nodes/{node_id}"
+    url = urljoin(URL, f"/flows/{FLOW_ID}/nodes/{node_id}")
 
     headers = {
         "accept": "application/json",
@@ -63,8 +67,11 @@ def main():
         file_name = os.path.basename(path)
         node_id = get_node_id(file_name)
         if node_id:
-            result = update_node(node_id, path)
-            print(f"Updated node {node_id} with {file_name}: {result}")
+            try:
+                result = update_node(node_id, path)
+                print(f"updated node {node_id} with {file_name}: {result}")
+            except requests.exceptions.RequestException as e:
+                print(f"error updating node for {file_name}: {e}")
         else:
             print(f"No node ID mapping found for {file_name}")
 
