@@ -39,6 +39,7 @@ def update_node(node_id, script_path):
         script_content = file.read()
 
     url = URL
+    print(f"script content {script_content}")
 
     headers = {
         "accept": "application/json",
@@ -46,9 +47,10 @@ def update_node(node_id, script_path):
         "X-Api-Key": API_KEY
     }
     payload = {
-        "type": "code",
-        "config": {
-            "code": script_content
+        "data": {
+            "node_id": node_id,
+            "flow_id": FLOW_ID,
+            "src_code": script_content
         },
         "metadata": {
             "version": "v1.0",
