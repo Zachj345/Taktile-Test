@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 #     config = json.load(config_file)
 
 API_KEY = os.environ['API_KEY']
-URL = os.environ['URL']  
+URL = os.environ['URL']
 FLOW_ID = os.environ['FLOW_ID']
 NODE_ID = os.environ['NODE_ID']
 
@@ -17,11 +17,13 @@ if not URL.startswith(('http://', 'https://')):
 
 excluded_files = ["node_updating.py", "api_testing.py"]
 
+
 def get_node_id(file_name):
     if file_name in excluded_files:
         return None
     else:
         return NODE_ID
+
 
 def update_node(node_id, script_path):
     with open(script_path, 'r') as file:
@@ -62,6 +64,11 @@ def main():
     test_node_id = NODE_ID
     # Get all Python files in current dir and sub-dirs
     py_files = get_python_files('.')
+    # Print first and last 5 characters of API key
+    print(f"API Key: {API_KEY[:5]}...{API_KEY[-5:]}")
+    print(f"Base URL: {URL}")
+    print(f"Flow ID: {FLOW_ID}")
+    print(f"Node ID: {NODE_ID}")
 
     for path in py_files:
         file_name = os.path.basename(path)
