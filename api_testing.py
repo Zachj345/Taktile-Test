@@ -2,15 +2,17 @@ import requests
 import os
 import json
 
-with open(".github/workflows/config.json", "r") as config_file:
-    config = json.load(config_file)
+# with open(".github/workflows/config.json", "r") as config_file:
+#     config = json.load(config_file)
 
-print(config["api_key"])
+API_KEY = os.environ['API_KEY'].strip('"')
+FLOW_ID = os.environ["FLOW_ID"].strip('"')
+
 url = "https://eu-central-1.taktile-org.decide.taktile.com/run/api/v1/flows/list-decision-graphs/sandbox/decide"
 headers = {
     "accept": 'application/json',
     'Content-Type': 'application/json',
-    "X-Api-Key": config["api_key"]
+    "X-Api-Key": API_KEY
 }
 
 body = {
@@ -30,7 +32,7 @@ url2 = "https://eu-central-1.taktile-org.decide.taktile.com/run/api/v1/flows/get
 
 body2 = {
     "data": {
-        "flow_id": config["flow_id"]
+        "flow_id": FLOW_ID
     },
     "metadata": {
         "version": "v1.0",
