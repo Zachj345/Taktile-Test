@@ -17,11 +17,17 @@ if not URL.startswith(('http://', 'https://')):
 
 excluded_files = ["node_updating.py", "api_testing.py"]
 
+default_node_id = NODE_ID
 
 def get_node_id(file_name):
     if file_name in excluded_files:
         return None
-    else:
+    node_name = file_name[:-3].upper()
+    env_var_name = f'NODE_ID_{node_name}'
+    # using default node ID as we weren't provided others in the api docs
+    try:
+        return os.environ.get(env_var_name, NODE_ID)
+    except KeyError:
         return NODE_ID
 
 
