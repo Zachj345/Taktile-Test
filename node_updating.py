@@ -11,6 +11,14 @@ URL = os.environ['URL']  # Assuming this is your BASE_URL
 FLOW_ID = os.environ['FLOW_ID']
 NODE_ID = os.environ['NODE_ID']
 
+excluded_files = ["node_updating.py", "api_testing.py"]
+
+def get_node_id(file_name):
+    if file_name in excluded_files:
+        return None
+    else:
+        return NODE_ID
+
 def update_node(node_id, script_path):
     with open(script_path, 'r') as file:
         script_content = file.read()
@@ -41,7 +49,7 @@ def get_python_files(directory):
 
     for root, dirs, files, in os.walk(directory):
         for i in files:
-            if i.endswith(".py"):
+            if i.endswith(".py") and i not in excluded_files:
                 py_files.append(os.path.join(root, i))
     return py_files
 
@@ -51,17 +59,10 @@ def main():
     # Get all Python files in current dir and sub-dirs
     py_files = get_python_files('.')
 
-    # Map of file names to node IDs
-    file_to_node = {
-        'script1.py': test_node_id,
-        'script2.py': test_node_id,
-        # Add more mappings as needed
-    }
-
     for path in py_files:
         file_name = os.path.basename(path)
-        if file_name in file_to_node:
-            node_id = file_to_node[file_name]
+        node_id = get_node_id(file_name)
+        if node_id:
             result = update_node(node_id, path)
             print(f"Updated node {node_id} with {file_name}: {result}")
         else:
