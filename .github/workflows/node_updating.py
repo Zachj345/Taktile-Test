@@ -2,72 +2,71 @@ import os
 import requests
 import json
 
-with open(".github/workflows/config.json", "r") as config_file:
+# Load configuration
+with open('config.json', 'r') as config_file:
     config = json.load(config_file)
 
-# this will send the new code in github to taktile
+API_KEY = config['api_key']
+URL = config['base_url']
+FLOW_ID = config['flow_id']
 
-
-def code_to_taktile(file_path, node_id):
-    url = config["url"]
-    flow_id = config["flow_id"]  # copied from docs
-    node_id = config["node_id"]  # copied from docs
-    api_key = config["api_key"]
-
-    print(flow_id, api_key)
+def update_node(node_id, script_path):
+    with open(script_path, 'r') as file:
+        script_content = file.read()
+    
+    url = f"{URL}/flows/{FLOW_ID}/nodes/{node_id}"
 
     headers = {
         "accept": "application/json",
-        "Content-Type": "application/json",
-        "X-Api-Key": api_key
+        "content-type": "application/json",
+        "X-Api-Key": API_KEY
     }
-
-    if not os.path.exists(file_path):
-        print(f"file at {file_path} does not exist currently")
-        return
-
-    with open(file_path, "r") as file:
-        src_code = file.read()
-    # src_code = "def new_function_added(): return 'new code uploaded'"
-
     payload = {
-        "metadata": {
-            "version": "v1.0",
-            "entity_id": "string"
-        },
-        "control": {
-            "execution_mode": "sync"
-        },
-
-        "data": {
-            "flow_id": flow_id,
-            "node_id": node_id,
-            "src_code": src_code
+        "type": "code",
+        "config": {
+            "code": script_content
         }
     }
+    
+    response = requests.patch(url, headers=headers, json=payload)
+    print(response.status_code)
+    print(response.text)
 
-    response = requests.post(url, headers=headers, json=payload)
-    if response.status_code == 200:
-        print("Code node updated successfully!", node_id)
-    else:
-        print(response)
-        print(
-            f"Failed upload with status code of {response.status_code} \n text here: {response.text}")
+    return response.json()
 
+def get_python_files(directory):
+    py_files = []
+
+    for root, dirs, files, in os.walk(directory):
+        for i in files:
+            if i.endswith(".py"):
+                py_files.append(os.path.join(root, i))
+    return py_files
+    
+
+def main():
+    test_node_id = config["node_id"]
+    # Get all Python files in current dir and sub-dirs
+    py_files = get_python_files('.')
+
+    # Map of file names to node IDs
+    file_to_node = {
+        'script1.py': test_node_id,
+        'script2.py': test_node_id,
+        # Add more mappings as needed
+    }
+
+    for path in py_files:
+        file_name = os.path.basename(path)
+        if file_name in file_to_node:
+            node_id = file_to_node[file_name]
+            result = update_node(node_id, path)
+            print(f"Updated node {node_id} with {file_name}: {result}")
+        else:
+            print(f"No node ID mapping found for {file_name}")
 
 if __name__ == "__main__":
-    # getting the updated code in github actions, and reading it here to push to taktile
-    # if we were just using the 2 example files the code would look something like this below
-    # with open("Multiply.py", "r") as file:
-    #     updated = file.read()
-    # with open("Summarize.py", "r") as second_file:
-    #     second_updated = second_file.read()
-    # code_to_taktile(updated)
-    # code_to_taktile(second_updated)
+    main()
 
-    # using the same node ID because these were exmples in the docs and there weren't any others
-    multiply_node_id = os.getenv("node_id")
-    summarize_node_id = os.getenv("node_id")
 
-    code_to_taktile("Multiply.py", multiply_node_id)
-    code_to_taktile("Summarize.py", summarize_node_id)
+
