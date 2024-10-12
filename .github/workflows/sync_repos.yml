@@ -36,6 +36,13 @@ jobs:
               cp "$file" "../Taktile-Test/$file"
             fi
           done
+      - name: Trigger Sync and Update in Taktile-Test
+        run: |
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.CLIENT_GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/Zachj345/Taktile-Test/dispatches \
+          -d '{"event_type": "update_nodes"}'
 
       - name: Commit and Push Changes
         run: |
