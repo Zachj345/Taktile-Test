@@ -1,60 +1,60 @@
 name: Sync and Update
 
 on:
-  workflow_dispatch:  # Allows manual triggering of the workflow
-  repository_dispatch:  # Allows triggering from another repository
-    types: [update_nodes]  # Specify the event type to listen for
+  repository_dispatch: # Allows triggering from another repository
+    types: [update_nodes] # Specify the event type to listen for
   push:
     branches:
       - main
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    env:  # Set environment variables for the entire job
+    env: # Set environment variables for the entire job
       API_KEY: ${{ secrets.API_KEY }}
       URL: ${{ secrets.URL }}
       FLOW_ID: ${{ secrets.FLOW_ID }}
       NODE_ID: ${{ secrets.NODE_ID }}
 
     steps:
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'  # Specify the desired Python version
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x" # Specify the desired Python version
 
-    - name: Checkout Taktile-Test
-      uses: actions/checkout@v2
-      with:
-        repository: Zachj345/Taktile-Test
-        token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
-        path: Taktile-Test
+      - name: Checkout Taktile-Test
+        uses: actions/checkout@v2
+        with:
+          repository: Zachj345/Taktile-Test
+          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
+          path: Taktile-Test
 
-    - name: Checkout NB36-test
-      uses: actions/checkout@v2
-      with:
-        repository: Zachj345/NB36-test
-        token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
-        path: NB36-test
+      - name: Checkout NB36-test
+        uses: actions/checkout@v2
+        with:
+          repository: Zachj345/NB36-test
+          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
+          path: NB36-test
 
-    - name: Install Dependencies
-      run: |
-        cd Taktile-Test
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Ensure you have a requirements.txt file
+      - name: Install Dependencies
+        run: |
+          cd Taktile-Test
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Ensure you have a requirements.txt file
 
-    - name: Copy New Python Files
-      run: |
-        cd NB36-test
-        for file in $(find . -name "*.py"); do
-          if [ ! -f "../Taktile-Test/$file" ] || [ "$file" -nt "../Taktile-Test/$file" ]; then
-            echo "Copying $file to Taktile-Test"
-            mkdir -p "../Taktile-Test/$(dirname $file)"
-            cp "$file" "../Taktile-Test/$file"
-          fi
-        done
+      - name: Copy New Python Files
+        run: |
+          cd NB36-test
+          for file in $(find . -name "*.py"); do
+            if [ ! -f "../Taktile-Test/$file" ] || [ "$file" -nt "../Taktile-Test/$file" ]; then
+              echo "Copying $file to Taktile-Test"
+              mkdir -p "../Taktile-Test/$(dirname $file)"
+              cp "$file" "../Taktile-Test/$file"
+            fi
+          done
 
-    - name: Run Update Script
-      run: |
-        cd Taktile-Test
-        python node_updating.py  # The script can now access the environment variables
+      - name: Run Update Script
+        run: |
+          cd Taktile-Test
+          python node_updating.py  # The script can now access the environment variables
