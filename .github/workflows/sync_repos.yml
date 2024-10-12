@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: Zachj345/Taktile-Test
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CLIENT_GITHUB_TOKEN }}
           path: Taktile-Test
 
       - name: Checkout NB36-test
@@ -36,19 +36,18 @@ jobs:
               cp "$file" "../Taktile-Test/$file"
             fi
           done
-    
 
       - name: Commit and Push Changes
         run: |
-         cd Taktile-Test
-         git config user.name "github-actions"
-         git config user.email "action@github.com"
-         git remote add source https://github.com/Zachj345/Taktile-Test.git || echo "Remote 'source' already exists"
+          cd Taktile-Test
+          git config user.name "github-actions"
+          git config user.email "action@github.com"
+          git remote add source https://github.com/Zachj345/Taktile-Test.git || echo "Remote 'source' already exists"
 
-         git fetch source
-        
-         git merge source/main || { echo "Merge conflict detected. Please resolve manually."; exit 1; }
-        
-         git add .
-         git commit -m "Sync new Python files from NB36-test" || echo "No changes to commit"
-         git push source main
+          git fetch source
+
+          git merge source/main || { echo "Merge conflict detected. Please resolve manually."; exit 1; }
+
+          git add .
+          git commit -m "Sync new Python files from NB36-test" || echo "No changes to commit"
+          git push source main
