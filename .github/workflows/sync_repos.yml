@@ -39,12 +39,14 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          cd Taktile-Test
-          git config user.name "github-actions"
-          git config user.email "action@github.com"
-          git add .
-          git commit -m "Sync new Python files from NB36-test" || echo "No changes to commit"
-
-          git remote add source https://github.com/Zachj345/Taktile-Test.git || echo "Remote 'source' already exists"
-
-          git push source main
+         cd Taktile-Test
+         git config user.name "github-actions"
+         git config user.email "action@github.com"
+        
+         git fetch source
+        
+         git merge source/main || { echo "Merge conflict detected. Please resolve manually."; exit 1; }
+        
+         git add .
+         git commit -m "Sync new Python files from NB36-test" || echo "No changes to commit"
+         git push source main
