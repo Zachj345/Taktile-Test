@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  repository_dispatch:
+    types: [update_nodes]
 
 permissions:
   contents: write # Allow write access to the repository contents
