@@ -2,6 +2,8 @@ name: Sync and Update
 
 on:
   workflow_dispatch:  # Allows manual triggering of the workflow
+  repository_dispatch:  # Allows triggering from another repository
+    types: [update_nodes]  # Specify the event type to listen for
   push:
     branches:
       - main
