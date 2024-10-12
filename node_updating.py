@@ -80,9 +80,10 @@ def get_python_files(directory):
 
 def main():
     test_node_id = NODE_ID
-    # Get all Python files in current dir and sub-dirs
+    # get all python files in current dir and sub-dirs
     py_files = get_python_files('.')
-    # Print first and last 5 characters of API key
+    print(f"found python files here:, {py_files}")
+    # print first and last 5 characters of API key to verify we have access
     print(f"API Key: {API_KEY[:5]}...{API_KEY[-5:]}")
     print(f"Base URL: {URL}")
     print(f"Flow ID: {FLOW_ID}")
