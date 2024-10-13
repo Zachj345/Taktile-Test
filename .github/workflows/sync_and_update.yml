@@ -1,10 +1,10 @@
 name: Sync and Update
 
 on:
-  # repository_dispatch: # Allows triggering from another repository
-  #   types: [update_nodes] # Specify the event type to listen for
+  # repository_dispatch: # allows triggering from another repository
+  #   types: [update_nodes] # event type to listen for
 
-  workflow_dispatch: # Allows manual triggering of the workflow
+  workflow_dispatch: # manual triggering of the workflow
 
   push:
     branches:
@@ -13,7 +13,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    env: # Set environment variables for the entire job
+    env: # set env variables for the whole job
       API_KEY: ${{ secrets.API_KEY }}
       URL: ${{ secrets.URL }}
       FLOW_ID: ${{ secrets.FLOW_ID }}
@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.x" # Specify the desired Python version
+          python-version: "3.x" 
 
       - name: Checkout Taktile-Test
         uses: actions/checkout@v2

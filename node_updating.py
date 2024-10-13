@@ -3,18 +3,12 @@ import requests
 import json
 from urllib.parse import urljoin
 
-# Load configuration
-# with open('config.json', 'r') as config_file:
-#     config = json.load(config_file)
 
 API_KEY = os.environ['API_KEY'].strip('"')
 # since there's no sensitive data here I'm just going to hardcode it
 URL = "https://eu-central-1.taktile-org.decide.taktile.com/run/api/v1/flows/patch-decision-graph/sandbox/decide"
 FLOW_ID = os.environ['FLOW_ID'].strip('"')
 NODE_ID = os.environ['NODE_ID'].strip('"')
-
-# if not URL.startswith(('http://', 'https://')):
-#     URL = 'https://' + URL
 
 excluded_files = ["node_updating.py", "api_testing.py"]
 

@@ -8,7 +8,7 @@ on:
     types: [update_nodes]
 
 permissions:
-  contents: write # Allow write access to the repository contents
+  contents: write # allow write access to the repository contents
 
 jobs:
   sync:
